@@ -99,8 +99,8 @@ mix1 <- mmer(BWT~1,
 ```{r}
 summary(mix1)$varcomp
 ```
-- `ANIMAL.BWT-BWT` is the phenotypic variance `V_P`
-- `units.BWT-BWT` is the residual (unexplained) variance `V_R`
+> - `ANIMAL.BWT-BWT` is the phenotypic variance $V_P$
+- `units.BWT-BWT` is the residual (unexplained) variance $V_R$
 
 ## Estimating heritability
 ```{r echo=F}
@@ -112,7 +112,7 @@ summary(mix1)$varcomp[1]
 
 ## Covariance between traits {.smaller .build}
 
-- One of the questions we would like to address is whether traits are independent
+> - One of the questions we would like to address is whether traits are independent
 - This can be done by including multiple traits in the response variable
 
 ```{r}
@@ -121,13 +121,13 @@ mix2 <- mmer(cbind(BWT,TARSUS)~1,
              rcov=~vs(units),
              na.method.Y = "include2",
              data=DT, verbose = F)
-summary(mix2)$varcomp
+head(summary(mix2)$varcomp, 3)
 cov2cor(mix2$sigma$`u:ANIMAL`)
 ```
 
 ## Best linear unbiased predictors (BLUPs) of individual breeding values {.smaller .build}
 
-- Mixed models can allow us to solve for individual's breeding values, which software like `sommer` report (see docs for the `mmer` function.
+> - Mixed models can allow us to solve for individual's breeding values, which software like `sommer` report (see docs for the `mmer` function.
   - These are assumed to be normally distributed
 ```{r fig.height=3, fig.width=3}
 hist(mix1$U$`u:ANIMAL`$BWT, main = "", xlab = "")
@@ -135,7 +135,7 @@ hist(mix1$U$`u:ANIMAL`$BWT, main = "", xlab = "")
 
 ## Phylogenetic models are conceptually similar {.smaller .build}
 
-- Species are non-independent, and we can estimate the effect of phylogenetic covariance
+> - Species are non-independent, and we can estimate the effect of phylogenetic covariance
 -  We have a adata set and a phylogeny, which from which a covariance matrix is computed
 ```{r echo=FALSE, fig.height=4}
 phylo <- ape::read.nexus("https://paul-buerkner.github.io/data/phylo.nex")
@@ -150,9 +150,9 @@ A <- solve(inv.phylo$Ainv)
 rownames(A) <- rownames(inv.phylo$Ainv)
 ```
 
---- 
+## Bayesian model fitting {.build}
 
-- Here we use `brms`, which is Bayesian, so we should explicitly specify the priors
+> - Here we use `brms`, which is Bayesian, so we should explicitly specify the priors
 - The syntax is a bit different, but recognizably similar to what `sommer` does
 ```{r cache=T, message=F, warning=F, results=F}
 model_simple <- brm(
@@ -172,8 +172,8 @@ model_simple <- brm(
 summary(model_simple)
 ```
 
-## Computing phylogenetic signal {.smaller}
-- This is roughly analagous to $h^2$ in the animal model
+## Computing phylogenetic signal {.smaller .build}
+> - This is roughly analagous to $h^2$ in the animal model
 ```{r}
 hyp <- "sd_phylo__Intercept^2 / (sd_phylo__Intercept^2 + sigma^2) = 0"
 (hyp <- hypothesis(model_simple, hyp, class = NULL))
@@ -187,10 +187,13 @@ plot(hyp)
 - One popular Bayesian option is `MCMCglmm`, which is relatively fast even for large data sets. However, it is farily non-user friendly, particularly when it comes to setting up priors.
 - Another option is `brms`, which is easier to work with, but slower.
 
-## Making fmore complex models {.build}
+## Making more complex models
 
-- Other matrixes can be included to model more complex processes ([Thomson et al. (2018)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0197720))
-<img src="https://journals.plos.org/plosone/article/figure/image?size=large&id=10.1371/journal.pone.0197720.g002">
+Other matrixes can be included to model more complex processes 
+<img src="https://journals.plos.org/plosone/article/figure/image?size=large&id=10.1371/journal.pone.0197720.g002" height="400px">
+<div style="float:right">
+[Thomson et al. (2018)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0197720)
+</div>
 
 ## Exercises
 1. Make models using (a) sex as a fixed effect (b) year as a random effect and (c) both effects combined.
