@@ -98,8 +98,9 @@ mix1 <- mmer(BWT~1,
 ```{r}
 summary(mix1)$varcomp
 ```
-> - `ANIMAL.BWT-BWT` is the phenotypic variance $V_P$
+> - `ANIMAL.BWT-BWT` is the additive variance $V_A$
 - `units.BWT-BWT` is the residual (unexplained) variance $V_R$
+- Phenotypic variance $V_P$ is the sum of $V_A$ and $V_R$
 
 ## Estimating heritability
 ```{r echo=F}
