@@ -56,7 +56,6 @@ require(brms)
   - Typically, if, say an individual is measured multiple times, it's id is included as a random effect
   - However, random terms allow us to make inferences about the distribution of effects in the population as a whole
     - Including identity as a random effect also yields an estimate of the among-individual variance for $y$ in the population
-  - In the animal model, we treat the breeding value as 
 
 ## Animal model
 
@@ -174,7 +173,7 @@ summary(model_simple)
 
 ## Computing phylogenetic signal {.smaller .build}
 > - This is roughly analagous to $h^2$ in the animal model
-```{r}
+```{r fig.height=2}
 hyp <- "sd_phylo__Intercept^2 / (sd_phylo__Intercept^2 + sigma^2) = 0"
 (hyp <- hypothesis(model_simple, hyp, class = NULL))
 plot(hyp)
